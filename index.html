@@ -1,12 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap">
+  <link rel="stylesheet" href="style.css"> <!-- Link to external stylesheet -->
 </head>
 <body>
-    <img src="" alt="">
+  <div id="container">
+    <div id="image-container"></div> <!-- Container for displaying images -->
+    <div id="text-container">
+      <div id="question">Will you be my valentine?</div> <!-- Question -->
+      <div id="options">
+        <button id="yes-button" onclick="selectOption('yes')">Yes</button> <!-- Yes button -->
+        <button id="no-button" onclick="selectOption('no')">No</button> <!-- No button -->
+      </div>
+    </div>
+  </div>
+  <script>
+    // Global variables for "No" button image sequence
+    var noImageIndex = 0;
+    var noImages = ["yes/yes.gif","yes/yes2.gif","yes/yes3.gif","no/no.gif", "no/no2.gif", "no/no3.gif"];
+
+    // Function to handle button click events
+    function selectOption(option) {
+      if (option === 'yes') {
+        flashRainbowColors(function() {
+          document.getElementById('question').style.display = 'none'; // Hide the question
+          // No image is displayed for "Yes" option per your request
+        });
+      } else if (option === 'no') {
+        // Change text on the "No" button to "You sure?"
+        document.getElementById('no-button').innerText = 'You sure?';
+        // Increase font size of the "Yes" button
+        var yesButton = document.getElementById('yes-button');
+        var currentFontSize = window.getComputedStyle(yesButton).getPropertyValue('font-size');
+        var newSize = parseFloat(currentFontSize) * 1.9;
+        yesButton.style.fontSize = newSize + 'px';
+        
+        // Cycle through "No" images one by one:
+        if (noImageIndex === 0) {
+          // First click: do not display an image, just initialize the index.
+          noImageIndex = 1;
+        } else {
+          // Clear the image container and display the current image in the sequence
+          var imageContainer = document.getElementById('image-container');
+          imageContainer.innerHTML = '';
+          var img = new Image();
+          img.src = noImages[noImageIndex - 1];
+          img.alt = 'No Image ' + noImageIndex;
+          img.onload = function() {
+            imageContainer.appendChild(img);
+          };
+          // Cycle to the next image (wrap back after the last one)
+          noImageIndex++;
+          if (noImageIndex > noImages.length) {
+            noImageIndex = 1;
+          }
+        }
+      } else {
+        alert('Invalid option!');
+      }
+    }
+
+    // Function to flash rainbow colors
+    function flashRainbowColors(callback) {
+      var colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3'];
+      var i = 0;
+      var interval = setInterval(function() {
+        document.body.style.backgroundColor = colors[i];
+        i = (i + 1) % colors.length;
+      }, 200);
+      setTimeout(function() {
+        clearInterval(interval);
+        document.body.style.backgroundColor = '';
+        if (callback) callback();
+      }, 2000);
+    }
+  </script>
 </body>
 </html>
